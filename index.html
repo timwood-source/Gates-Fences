@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#003b71">
+<title>PHS Gate Access Dashboard</title>
+<style>
+:root{
+  --red:#c8102e;--red-dark:#9e1028;--navy:#003b71;--blue:#0b4f8a;
+  --ink:#122033;--muted:#667085;--bg:#eef3f8;--card:#fff;--line:#d8e1ec;
+  --green:#147d4f;--orange:#b85f00;--slate:#475467;
+  --green-soft:#eaf7ef;--orange-soft:#fff2df;--red-soft:#fdecef;--blue-soft:#eaf3ff;--slate-soft:#eef2f6;
+  --shadow:0 18px 48px rgba(0,42,78,.12);--soft-shadow:0 8px 24px rgba(0,42,78,.07);
+  --radius:22px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 0 -12%,rgba(200,16,46,.11),transparent 31rem),radial-gradient(circle at 100% 0,rgba(0,59,113,.13),transparent 34rem),var(--bg)}
+button,input,select{font:inherit}
+button,a{touch-action:manipulation}
+button{cursor:pointer}
+.topline{height:7px;background:linear-gradient(90deg,var(--red),var(--navy) 65%,var(--blue))}
+.shell{width:min(1280px,calc(100% - 32px));margin:auto;padding:22px 0 52px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+.hero{position:relative;overflow:hidden;border:1px solid rgba(255,255,255,.5);border-radius:28px;background:var(--navy);box-shadow:var(--shadow);min-height:370px;color:#fff}
+.hero-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;filter:saturate(.9) contrast(1.02);transition:opacity .2s ease,transform .6s ease}
+.hero:hover .hero-image{transform:scale(1.012)}
+.hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(3,25,48,.94) 0%,rgba(3,31,59,.83) 42%,rgba(3,31,59,.33) 73%,rgba(3,31,59,.16));pointer-events:none}
+.hero-content{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:center;min-height:370px;width:min(670px,68%);padding:42px 46px}
+.eyebrow{margin:0 0 11px;font-size:.74rem;font-weight:900;text-transform:uppercase;letter-spacing:.15em;color:#ffd9df}
+.hero h1{margin:0;font-size:clamp(2.1rem,4.4vw,3.8rem);line-height:.98;letter-spacing:-.048em}
+.hero-lead{margin:15px 0 0;max-width:620px;font-size:1.04rem;line-height:1.65;color:rgba(255,255,255,.86)}
+.hero-meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:17px;color:rgba(255,255,255,.83);font-size:.86rem;font-weight:750}
+.dot{width:5px;height:5px;border-radius:50%;background:#ff9aac}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:23px}
+.btn{min-height:43px;border:1px solid rgba(255,255,255,.33);border-radius:999px;padding:10px 15px;color:#fff;background:rgba(255,255,255,.09);backdrop-filter:blur(10px);display:inline-flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;font-weight:850;font-size:.88rem;transition:.18s ease}
+.btn:hover{background:rgba(255,255,255,.17);transform:translateY(-1px)}
+.btn.primary{background:#fff;color:var(--navy);border-color:#fff}
+.btn.emergency{background:var(--red);border-color:var(--red)}
+.btn svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.hero-photo-label{position:absolute;z-index:2;right:20px;bottom:18px;max-width:330px;background:rgba(3,25,48,.76);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:14px;padding:10px 13px;backdrop-filter:blur(9px);font-size:.79rem;font-weight:750}
+.hero-photo-label strong{display:block;font-size:.92rem;margin-bottom:2px}
+
+.controls{position:sticky;top:8px;z-index:30;margin:16px 0;background:rgba(255,255,255,.94);border:1px solid rgba(216,225,236,.85);border-radius:20px;padding:13px;box-shadow:0 12px 30px rgba(0,42,78,.11);backdrop-filter:blur(15px)}
+.control-top{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center}
+.campus-tabs{display:flex;background:#edf2f7;border-radius:14px;padding:4px;gap:4px}
+.campus-tab{border:0;border-radius:11px;padding:10px 18px;background:transparent;color:var(--navy);font-weight:900;min-height:44px}
+.campus-tab.active{background:var(--red);color:#fff;box-shadow:0 8px 17px rgba(200,16,46,.21)}
+.mode-wrap{display:flex;gap:9px;align-items:center}
+.mode-wrap label{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:900;white-space:nowrap}
+.mode-wrap select{border:1px solid var(--line);border-radius:12px;padding:10px 36px 10px 12px;color:var(--navy);background:#fff;font-weight:800;min-height:44px}
+.control-bottom{display:grid;grid-template-columns:minmax(240px,1fr) auto;gap:12px;margin-top:11px;align-items:center}
+.search-wrap{position:relative}
+.search-wrap svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:18px;height:18px;fill:none;stroke:#7b8796;stroke-width:2}
+.search-wrap input{width:100%;min-height:44px;border:1px solid var(--line);border-radius:13px;padding:10px 74px 10px 42px;background:#fbfcfe;color:var(--ink)}
+.clear-search{position:absolute;right:6px;top:6px;min-height:32px;border:0;border-radius:9px;padding:6px 10px;background:#e9eef5;color:var(--navy);font-size:.74rem;font-weight:900}
+.filters{display:flex;gap:7px;overflow-x:auto;padding-bottom:1px}
+.filter{white-space:nowrap;min-height:40px;border:1px solid var(--line);border-radius:999px;padding:8px 12px;background:#fff;color:var(--navy);font-size:.8rem;font-weight:850}
+.filter.active{background:var(--navy);border-color:var(--navy);color:#fff}
+.nowline{margin:9px 2px 0;color:var(--muted);font-size:.8rem;font-weight:720}
+
+.notice{display:flex;align-items:center;justify-content:space-between;gap:16px;background:linear-gradient(108deg,var(--navy),var(--blue));color:#fff;border-radius:18px;padding:14px 17px;box-shadow:var(--soft-shadow)}
+.notice-main{display:flex;gap:11px;align-items:flex-start}
+.notice-icon{width:36px;height:36px;border-radius:11px;background:rgba(255,255,255,.13);display:grid;place-items:center;flex:0 0 auto}
+.notice-icon svg{width:19px;height:19px;fill:none;stroke:#fff;stroke-width:2}
+.notice strong{display:block;font-size:.94rem;margin-bottom:2px}
+.notice p{margin:0;color:rgba(255,255,255,.76);font-size:.81rem;line-height:1.45}
+.notice a{color:#fff;font-size:.78rem;font-weight:850;text-decoration:none;border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:8px 11px;white-space:nowrap}
+
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:16px 0 27px}
+.metric{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:18px;padding:16px 17px;background:#fff;box-shadow:var(--soft-shadow);min-height:118px}
+.metric::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:var(--navy)}
+.metric:nth-child(1)::after{background:var(--green)}.metric:nth-child(2)::after{background:var(--blue)}.metric:nth-child(3)::after{background:var(--red)}.metric:nth-child(4)::after{background:var(--orange)}
+.metric-label{display:block;color:var(--muted);font-size:.68rem;letter-spacing:.09em;text-transform:uppercase;font-weight:900}
+.metric-value{display:block;margin-top:7px;color:var(--navy);font-size:1.58rem;line-height:1.05;font-weight:950;letter-spacing:-.035em}
+.metric-value.compact{font-size:1rem;line-height:1.32;letter-spacing:-.01em}
+.metric-note{display:block;margin-top:6px;color:var(--muted);font-size:.76rem;line-height:1.35}
+
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:14px;margin:30px 0 12px}
+.section-kicker{margin:0 0 4px;color:var(--red);font-size:.67rem;text-transform:uppercase;letter-spacing:.12em;font-weight:950}
+.section-head h2{margin:0;color:var(--navy);font-size:1.55rem;letter-spacing:-.025em}
+.section-head p{margin:5px 0 0;color:var(--muted);font-size:.9rem;line-height:1.45}
+.count{border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--muted);padding:7px 10px;font-size:.76rem;font-weight:850;white-space:nowrap}
+
+.gate-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.gate-card{--accent:var(--slate);position:relative;overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:19px;box-shadow:var(--soft-shadow);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;display:flex;flex-direction:column}
+.gate-card:hover{transform:translateY(-2px);box-shadow:0 15px 35px rgba(0,42,78,.12);border-color:#c3d0df}
+.gate-card::before{content:"";display:block;height:5px;background:var(--accent)}
+.gate-card.open{--accent:var(--green)}.gate-card.closed{--accent:var(--red)}.gate-card.event{--accent:var(--orange)}.gate-card.unscheduled{--accent:var(--slate)}
+.card-main{padding:15px 16px 13px;display:flex;flex-direction:column;gap:12px;flex:1}
+.card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.gate-title-wrap{display:flex;gap:10px;align-items:flex-start;min-width:0}
+.gate-icon{width:35px;height:35px;border-radius:11px;background:#eef3f8;color:var(--navy);display:grid;place-items:center;flex:0 0 auto}
+.gate-icon svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.gate-card h3{margin:0;color:var(--navy);font-size:1.06rem;letter-spacing:-.018em}
+.location{margin:4px 0 0;color:var(--muted);font-size:.79rem;line-height:1.4}
+.badge{border-radius:999px;padding:6px 9px;font-size:.64rem;letter-spacing:.07em;text-transform:uppercase;font-weight:950;white-space:nowrap}
+.badge.open{background:var(--green-soft);color:var(--green)}.badge.closed{background:var(--red-soft);color:var(--red-dark)}.badge.event{background:var(--orange-soft);color:var(--orange)}.badge.unscheduled{background:var(--slate-soft);color:var(--slate)}
+.current-block{border-radius:14px;background:#f7f9fc;border:1px solid #e6edf5;padding:11px 12px}
+.current-state{font-weight:950;color:var(--ink);font-size:.91rem}
+.next-change{margin-top:3px;color:var(--muted);font-size:.78rem;line-height:1.4}
+.use{font-size:.86rem;line-height:1.45;color:#344054}
+.use strong{color:var(--ink)}
+.card-note{border-left:3px solid var(--red);background:#fff7f8;border-radius:10px;padding:8px 10px;color:#4b5565;font-size:.78rem;line-height:1.42}
+.card-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:auto}
+.card-btn{border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--navy);padding:7px 9px;font-size:.72rem;font-weight:850;min-height:34px}
+.schedule-details{border-top:1px solid var(--line);background:#fbfcfe}
+.schedule-details summary{list-style:none;padding:11px 16px;color:var(--navy);font-size:.76rem;font-weight:900;cursor:pointer;display:flex;align-items:center;justify-content:space-between}
+.schedule-details summary::-webkit-details-marker{display:none}
+.schedule-details summary::after{content:"+";font-size:1rem}.schedule-details[open] summary::after{content:"−"}
+.schedule-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;padding:0 16px 15px}
+.timebox{border:1px solid #e3eaf2;border-radius:10px;background:#fff;padding:8px}
+.timebox span{display:block;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-size:.59rem;font-weight:900;margin-bottom:2px}
+.timebox strong{font-size:.75rem;color:#344054;line-height:1.35}
+.empty{padding:25px;text-align:center;border:1px dashed #bbc8d6;border-radius:18px;background:rgba(255,255,255,.7);color:var(--muted);font-weight:750}
+.hidden{display:none!important}
+
+.emergency-panel{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(290px,.8fr);gap:18px;background:#fff;border:1px solid var(--line);border-radius:22px;padding:18px;box-shadow:var(--shadow)}
+.map-figure{margin:0}
+.map-figure img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border:1px solid var(--line);border-radius:15px;background:#e9eef5;cursor:zoom-in}
+.map-figure figcaption{margin-top:7px;color:var(--muted);font-size:.74rem;line-height:1.45}
+.addresses{display:flex;flex-direction:column;gap:10px}
+.address-card{position:relative;border:1px solid var(--line);border-left:5px solid var(--red);border-radius:15px;background:#fbfcfe;padding:13px 86px 13px 14px}
+.address-card.blue{border-left-color:var(--blue)}
+.address-card h3{margin:0;color:var(--navy);font-size:.96rem}
+.address-card p{margin:5px 0 0;color:#475467;font-size:.79rem;line-height:1.45}
+.copy{position:absolute;right:9px;top:9px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--navy);padding:6px 8px;font-size:.67rem;font-weight:900}
+.emergency-note{border:1px solid #f2c6ce;border-left:5px solid var(--red);border-radius:14px;background:#fff4f6;padding:11px 13px;color:#7c2030;font-size:.79rem;font-weight:800;line-height:1.45}
+
+.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:18px;background:#fff;box-shadow:var(--soft-shadow)}
+table{width:100%;border-collapse:collapse;min-width:900px}
+th,td{padding:10px 11px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;font-size:.78rem;line-height:1.4}
+th{position:sticky;top:0;background:var(--navy);color:#fff;text-transform:uppercase;letter-spacing:.06em;font-size:.65rem;z-index:1}
+tr:last-child td{border-bottom:0}
+td strong{color:var(--navy)}
+td small{color:var(--muted)}
+
+.workflow{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.step{position:relative;overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:17px;padding:16px;box-shadow:var(--soft-shadow)}
+.step-no{position:absolute;right:12px;top:1px;color:rgba(0,59,113,.11);font-size:2.5rem;font-weight:950}
+.step h3{margin:18px 0 7px;color:var(--navy);font-size:.95rem}
+.step p{margin:0;color:#475467;font-size:.79rem;line-height:1.5}
+.contacts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.contact{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:var(--soft-shadow)}
+.contact-label{display:block;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-size:.6rem;font-weight:900}
+.contact strong{display:block;color:var(--navy);margin:5px 0 6px;font-size:.91rem}
+.contact a{color:#344054;font-size:.78rem;font-weight:800;text-decoration:none;overflow-wrap:anywhere}
+.contact a:hover{text-decoration:underline}
+.footer{margin:25px 0 0;text-align:center;color:var(--muted);font-size:.76rem;line-height:1.5}
+.floating-emergency{display:none;position:fixed;right:13px;bottom:13px;z-index:45;border:0;border-radius:999px;background:var(--red);color:#fff;padding:12px 14px;box-shadow:0 12px 30px rgba(120,0,27,.3);font-size:.78rem;font-weight:950;text-decoration:none}
+.toast{position:fixed;left:50%;bottom:24px;z-index:100;transform:translate(-50%,16px);opacity:0;pointer-events:none;background:#102b48;color:#fff;border-radius:999px;padding:10px 14px;box-shadow:0 14px 35px rgba(0,0,0,.25);font-size:.77rem;font-weight:850;transition:.18s ease}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.lightbox{position:fixed;inset:0;z-index:90;background:rgba(3,15,28,.88);display:grid;place-items:center;padding:22px;cursor:zoom-out}
+.lightbox img{max-width:96vw;max-height:92vh;border-radius:13px;box-shadow:0 28px 80px rgba(0,0,0,.5)}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{outline:3px solid #4ba3ff;outline-offset:2px}
+
+@media(max-width:1000px){
+  .hero-content{width:78%}.control-top,.control-bottom{grid-template-columns:1fr}.mode-wrap{justify-content:space-between}.gate-grid{grid-template-columns:repeat(2,1fr)}.metrics,.workflow,.contacts{grid-template-columns:repeat(2,1fr)}.emergency-panel{grid-template-columns:1fr}.controls{position:relative;top:auto}
+}
+@media(max-width:680px){
+  .shell{width:min(100% - 20px,1280px);padding-top:12px}.hero{min-height:455px;border-radius:21px}.hero::after{background:linear-gradient(180deg,rgba(3,25,48,.6),rgba(3,25,48,.95) 52%,rgba(3,25,48,.98))}.hero-content{justify-content:flex-end;width:100%;min-height:455px;padding:24px 19px 25px}.hero h1{font-size:2.25rem}.hero-lead{font-size:.92rem}.hero-photo-label{top:12px;right:12px;bottom:auto;max-width:74%}.actions .btn{flex:1 1 calc(50% - 8px)}.controls{padding:10px;border-radius:16px}.campus-tabs{overflow-x:auto}.campus-tab{min-width:145px;padding-inline:12px}.mode-wrap{align-items:stretch;flex-direction:column;gap:4px}.mode-wrap select{width:100%}.filters{margin-inline:-2px}.notice{align-items:flex-start;flex-direction:column}.metrics,.gate-grid,.workflow,.contacts{grid-template-columns:1fr}.metric{min-height:96px}.section-head{align-items:flex-start}.schedule-grid{grid-template-columns:1fr}.emergency-panel{padding:11px}.address-card{padding-right:80px}.floating-emergency{display:block}.map-figure img{aspect-ratio:4/3}.count{display:none}
+}
+@media print{
+  body{background:#fff}.topline,.controls,.actions,.notice a,.floating-emergency,.card-actions,.copy,.toast,.lightbox,.screen-only{display:none!important}.shell{width:100%;padding:0}.hero{min-height:auto;color:#000;background:#fff;box-shadow:none;border:1px solid #bbb}.hero-image,.hero-photo-label{display:none}.hero::after{display:none}.hero-content{width:100%;min-height:auto;padding:20px}.hero h1,.hero-lead,.hero-meta{color:#000}.notice{background:#fff;color:#000;border:1px solid #bbb;box-shadow:none}.notice p{color:#333}.metric,.gate-card,.emergency-panel,.table-wrap,.step,.contact{box-shadow:none;break-inside:avoid}.gate-grid,.metrics,.workflow,.contacts{grid-template-columns:repeat(2,1fr)}.schedule-details{display:block}.schedule-details summary{display:none}.schedule-grid{padding-top:12px}th{background:#eee!important;color:#000!important}.section-head{page-break-after:avoid}
+}
+</style>
+</head>
+<body>
+<div class="topline"></div>
+<main class="shell">
+  <header class="hero" id="top">
+    <img id="heroImage" class="hero-image" src="assets/wornall-aerial.jpg" alt="Aerial view of the Wornall Campus">
+    <div class="hero-content">
+      <p class="eyebrow">Pembroke Hill School · Security</p>
+      <h1 id="heroTitle">Wornall Campus Gate Access</h1>
+      <p id="heroLead" class="hero-lead">Daily access, visitor entry, driveline gates, and event controls for the Lower Campus.</p>
+      <div class="hero-meta"><span id="heroAddress">400 W. 51st Street, Kansas City, MO 64112</span><span class="dot"></span><span id="heroMode">Regular School Day</span></div>
+      <div class="actions">
+        <a class="btn emergency" href="#zones911"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9v4m0 4h.01M10.3 3.8 2.5 17.3A2 2 0 0 0 4.2 20h15.6a2 2 0 0 0 1.7-2.7L13.7 3.8a2 2 0 0 0-3.4 0Z"/></svg>911 Addressing</a>
+        <a class="btn" href="#gateCards"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v16M8 7h8M8 11h8M8 15h8M3 21h18"/></svg>View Gates</a>
+        <button class="btn primary" type="button" onclick="window.print()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9V3h12v6M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v7H6z"/></svg>Print / PDF</button>
+      </div>
+    </div>
+    <div class="hero-photo-label"><strong id="photoLabel">Wornall Campus</strong><span id="photoCaption">Lower Campus aerial view</span></div>
+  </header>
+
+  <section class="controls" aria-label="Dashboard controls">
+    <div class="control-top">
+      <div class="campus-tabs" id="campusTabs" role="tablist" aria-label="Campus views">
+        <button class="campus-tab active" type="button" role="tab" aria-selected="true" data-campus="Wornall Campus">Wornall Campus</button>
+        <button class="campus-tab" type="button" role="tab" aria-selected="false" data-campus="Ward Parkway">Ward Parkway</button>
+      </div>
+      <div class="mode-wrap">
+        <label for="scheduleMode">Schedule mode</label>
+        <select id="scheduleMode">
+          <option value="regular">Regular School Day</option>
+          <option value="late">Late Start</option>
+          <option value="allSchool">All-School Late Start</option>
+          <option value="summer">Summer / Break</option>
+          <option value="event">Event Operations</option>
+        </select>
+      </div>
+    </div>
+    <div class="control-bottom">
+      <div class="search-wrap">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+        <label class="sr-only" for="search">Search gates</label>
+        <input id="search" type="search" placeholder="Search gates, locations, uses, or notes" autocomplete="off">
+        <button id="clearSearch" class="clear-search hidden" type="button">Clear</button>
+      </div>
+      <div class="filters" id="filters" aria-label="Gate filters">
+        <button class="filter active" type="button" data-filter="all">All</button>
+        <button class="filter" type="button" data-filter="open">Open now</button>
+        <button class="filter" type="button" data-filter="scheduled">Scheduled</button>
+        <button class="filter" type="button" data-filter="event">Event only</button>
+        <button class="filter" type="button" data-filter="closed">Closed now</button>
+      </div>
+    </div>
+    <p id="nowLine" class="nowline"></p>
+  </section>
+
+  <section class="notice" aria-label="Schedule notice">
+    <div class="notice-main">
+      <div class="notice-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg></div>
+      <div><strong>Schedule-based status</strong><p>This view calculates expected gate conditions from the selected schedule mode. Temporary overrides, events, weather, and direct Security instructions take precedence.</p></div>
+    </div>
+    <a href="#contacts">Contact Security</a>
+  </section>
+
+  <section class="metrics" id="metrics" aria-label="Operational summary"></section>
+
+  <section id="gateCards">
+    <div class="section-head">
+      <div><p class="section-kicker">Live operating view</p><h2 id="campusHeading">Wornall Campus Gates</h2><p>Current condition, next scheduled change, primary use, and detailed schedule.</p></div>
+      <span class="count" id="countLine"></span>
+    </div>
+    <div class="gate-grid" id="cards"></div>
+    <div id="empty" class="empty hidden">No gates match the current search and filter.</div>
+  </section>
+
+  <section id="zones911">
+    <div class="section-head">
+      <div><p class="section-kicker">Emergency response</p><h2 id="zoneTitle">Wornall Campus 911 Addressing</h2><p>Use the address assigned to your physical location. The correct address can save critical minutes.</p></div>
+    </div>
+    <div class="emergency-panel">
+      <figure class="map-figure">
+        <img id="zoneMap" src="assets/wornall-911.jpg" alt="Wornall Campus 911 addressing zones">
+        <figcaption>Click or tap the map to enlarge. Use this as a quick orientation reference and follow building-specific guidance from Security during an incident.</figcaption>
+      </figure>
+      <div class="addresses" id="addresses"></div>
+    </div>
+  </section>
+
+  <section id="schedule">
+    <div class="section-head">
+      <div><p class="section-kicker">Reference table</p><h2>Print-Ready Gate Schedule</h2><p>Prepared for briefings, event planning, and operational review.</p></div>
+    </div>
+    <div class="table-wrap"><table id="scheduleTable"></table></div>
+  </section>
+
+  <section id="eventPlan">
+    <div class="section-head"><div><p class="section-kicker">Event operations</p><h2>Large Event Gate Control</h2><p>Use this sequence for controlled event access and post-event accountability.</p></div></div>
+    <div class="workflow">
+      <article class="step"><span class="step-no">01</span><h3>Confirm the access plan</h3><p>Identify the approved entry gates, operating window, expected attendance, and responsible staff.</p></article>
+      <article class="step"><span class="step-no">02</span><h3>Staff and monitor</h3><p>Every open gate must be staffed, directly monitored, or included in the documented event plan.</p></article>
+      <article class="step"><span class="step-no">03</span><h3>Guide and restrict</h3><p>Direct guests to the event area while protecting academic buildings, service areas, and other restricted spaces.</p></article>
+      <article class="step"><span class="step-no">04</span><h3>Close and verify</h3><p>At the end of the access window, confirm each gate is closed, latched, secured, and reported complete.</p></article>
+    </div>
+  </section>
+
+  <section id="contacts">
+    <div class="section-head"><div><p class="section-kicker">Assistance</p><h2>Security Contacts</h2></div></div>
+    <div class="contacts" id="contactCards"></div>
+  </section>
+
+  <p class="footer">PHS Gate Access Dashboard · Operational reference only · Confirm temporary changes with Security.</p>
+</main>
+<a class="floating-emergency" href="#zones911">911 Address</a>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script>
+const gateData = [
+  {campus:'Wornall Campus',name:'DeRamus Gate',location:'Large gate by DeRamus Gym',status:'Scheduled',use:'Daily driveline',am:'7:45 AM-8:30 AM',pm:'2:45 PM-3:45 PM',late:'9:30 AM-10:15 AM',allSchool:'-',notes:'Extended Day families have PINs'},
+  {campus:'Wornall Campus',name:'Dock Gate',location:'Dining Hall loading dock',status:'Scheduled',use:'Service and driveline support',am:'7:45 AM-8:30 AM',pm:'2:45 PM-3:45 PM',late:'9:30 AM-10:15 AM',allSchool:'-',notes:'Delivery and service access'},
+  {campus:'Wornall Campus',name:'Archives Gate',location:'Between Archives and Wornall Dining Hall',status:'Event Only',use:'Operational and event access',am:'Closed',pm:'Closed',late:'Closed',allSchool:'-',notes:'Opened only when authorized for events'},
+  {campus:'Wornall Campus',name:'Intermediate Gate',location:'South of the Intermediate front door',status:'Scheduled',use:'Intermediate arrival and dismissal',am:'7:45 AM-8:30 AM',pm:'2:45 PM-3:45 PM',late:'9:30 AM-10:15 AM',allSchool:'-',notes:'Closed outside approved windows'},
+  {campus:'Wornall Campus',name:'Wornall Main Gate',location:'Main gate by the security kiosk',status:'Scheduled',use:'Primary visitor and security entry',am:'7:45 AM-8:30 AM',pm:'2:45 PM-3:45 PM',late:'9:30 AM-10:15 AM',allSchool:'-',notes:'Visitors check in at the security kiosk'},
+  {campus:'Wornall Campus',name:'EC Main Gate',location:'Gate next to Early Childhood',status:'Scheduled',use:'Early Childhood arrival and dismissal',am:'7:45 AM-8:30 AM',pm:'2:45 PM-3:45 PM',late:'9:30 AM-10:15 AM',allSchool:'-',notes:'Closed outside approved windows'},
+  {campus:'Wornall Campus',name:'EC Side Gate',location:'Between Early Childhood and the turf field',status:'Event Only',use:'Event and support access',am:'Closed',pm:'Closed',late:'Closed',allSchool:'-',notes:'Opened only when authorized for events'},
+  {campus:'Wornall Campus',name:'Turf Field Gate',location:'Top of the steps to the turf field',status:'Event Only',use:'Athletics and event access',am:'Closed',pm:'Closed',late:'Closed',allSchool:'-',notes:'Security opens for approved Turf Field events and games'},
+  {campus:'Wornall Campus',name:'51st Street Gate',location:'Double gate along 51st Street',status:'Closed',use:'Controlled perimeter only',am:'Closed',pm:'Closed',late:'Closed',allSchool:'-',notes:'Remains closed'},
+  {campus:'Ward Parkway',name:'Boocock Gate',location:'Between Boocock and the Book Store',status:'Scheduled',use:'Daily arrival and dismissal',am:'7:45 AM-8:50 AM',pm:'2:45 PM-3:45 PM',late:'7:45 AM-10:15 AM',allSchool:'9:40 AM-10:15 AM',notes:'Closed outside approved windows'},
+  {campus:'Ward Parkway',name:'Bellis Gate',location:'Main gate by the security kiosk',status:'Scheduled',use:'Primary visitor, arrival, and dismissal access',am:'7:45 AM-8:50 AM',pm:'2:45 PM-3:45 PM',late:'7:45 AM-10:15 AM',allSchool:'9:40 AM-10:15 AM',notes:'Visitors check in at the security kiosk'},
+  {campus:'Ward Parkway',name:'Hicks Gate',location:'Pedestrian gate at the end of the Beals Gym HVAC enclosure',status:'Event Only',use:'Stadium and event release',am:'Closed',pm:'Closed',late:'Closed',allSchool:'Closed',notes:'Security opens at the end of approved stadium events'},
+  {campus:'Ward Parkway',name:'Vehicle Gate',location:'Large gate at the base of the Hicks Field track',status:'Event Only',use:'Operational and event vehicle access',am:'Closed',pm:'Closed',late:'Closed',allSchool:'Closed',notes:'Opened only when authorized for events'},
+  {campus:'Ward Parkway',name:'Referee Gate',location:'Adjacent to the referee parking lot off Ward Parkway',status:'Event Only',use:'Officials and event access',am:'Closed',pm:'Closed',late:'Closed',allSchool:'Closed',notes:'Opened only when authorized for events'},
+  {campus:'Ward Parkway',name:'Art Gate',location:'Underneath the art crossover',status:'Open Day',use:'Campus interior movement',am:'7:00 AM-10:00 PM',pm:'7:00 AM-10:00 PM',late:'7:00 AM-10:00 PM',allSchool:'7:00 AM-10:00 PM',notes:'Only closed when required by an event plan or temporary override'},
+  {campus:'Ward Parkway',name:'Jordan Gate',location:'Between Jordan Hall and Centennial Hall',status:'Event Only',use:'Event routing',am:'Closed',pm:'Closed',late:'Closed',allSchool:'Closed',notes:'Opened only when authorized for events'}
+];
+
+const campusData = {
+  'Wornall Campus':{
+    title:'Wornall Campus Gate Access',lead:'Daily access, visitor entry, driveline gates, and event controls for the Lower Campus.',address:'400 W. 51st Street, Kansas City, MO 64112',descriptor:'Lower Campus aerial view',hero:'assets/wornall-aerial.jpg',heroAlt:'Aerial view of the Wornall Campus',map:'assets/wornall-911.jpg',mapAlt:'Wornall Campus 911 addressing zones',visitor:'Wornall Main Gate',addresses:[
+      {address:'400 W. 51st Street, Kansas City, MO 64112',covers:'Early Childhood, Turf Field, Intermediate, Mellon, Dining Hall, and Founders Hall',tone:'red'},
+      {address:'451 W. 50th Street, Kansas City, MO 64112',covers:'DeRamus, Primary, Carriage House, Gaga Playground, Secret Playground, and Curry Theater',tone:'blue'}
+    ]
+  },
+  'Ward Parkway':{
+    title:'Ward Parkway Gate Access',lead:'Visitor access, daily arrival and dismissal gates, athletics access, and event controls for the Upper Campus.',address:'5121 State Line Road / 1439 W. 51st Street, Kansas City, MO 64112',descriptor:'Upper Campus aerial view',hero:'assets/ward-aerial.jpg',heroAlt:'Aerial view of the Ward Parkway Campus',map:'assets/ward-911.jpg',mapAlt:'Ward Parkway Campus 911 addressing zones',visitor:'Bellis Gate',addresses:[
+      {address:'5121 State Line Road, Kansas City, MO 64112',covers:'Boocock Middle School, Kemper Library, Upper School, Jordan Hall, and Centennial Hall',tone:'red'},
+      {address:'1439 W. 51st Street, Kansas City, MO 64112',covers:'Bellis Athletic Center, Hicks Field and Stadium, Hall Student Center, Patterson Hall, and Phillips Gym',tone:'blue'}
+    ]
+  }
+};
+
+const contacts = [
+  {label:'Security Director',name:'Tim Wood',href:'mailto:Tim.Wood@pembrokehill.org',display:'Tim.Wood@pembrokehill.org'},
+  {label:'General Security Email',name:'Security',href:'mailto:Security@Pembrokehill.org',display:'Security@Pembrokehill.org'},
+  {label:'Ward Security',name:'Ward Campus',href:'tel:8167645801',display:'816-764-5801'},
+  {label:'Wornall Security',name:'Wornall Campus',href:'tel:8167647258',display:'816-764-7258'}
+];
+
+const modes={regular:'Regular School Day',late:'Late Start',allSchool:'All-School Late Start',summer:'Summer / Break',event:'Event Operations'};
+const state={campus:'Wornall Campus',mode:'regular',filter:'all',search:''};
+
+const icons={
+  visitor:'<svg viewBox="0 0 24 24"><path d="M4 21V5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v16M8 7h8M8 11h8M8 15h8M3 21h18"/></svg>',
+  vehicle:'<svg viewBox="0 0 24 24"><path d="m5 17-1 2m15-2 1 2M3 14l2-6h14l2 6v5H3zM7 16h.01M17 16h.01"/></svg>',
+  event:'<svg viewBox="0 0 24 24"><path d="M4 5h16v14H4zM8 3v4M16 3v4M4 10h16"/></svg>',
+  gate:'<svg viewBox="0 0 24 24"><path d="M5 21V5l7-2v18M19 21V5l-7-2M8 9h1M15 9h1M3 21h18"/></svg>',
+  delivery:'<svg viewBox="0 0 24 24"><path d="M3 6h11v11H3zM14 10h4l3 3v4h-7zM7 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM18 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/></svg>'
+};
+function iconFor(g){const t=(g.use+' '+g.location).toLowerCase();if(t.includes('visitor'))return icons.visitor;if(t.includes('vehicle'))return icons.vehicle;if(t.includes('event')||t.includes('athletics')||t.includes('official'))return icons.event;if(t.includes('delivery')||t.includes('service'))return icons.delivery;return icons.gate}
+function esc(v){return String(v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function chicagoNow(){const parts=new Intl.DateTimeFormat('en-US',{timeZone:'America/Chicago',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false,weekday:'long'}).formatToParts(new Date());const p=Object.fromEntries(parts.map(x=>[x.type,x.value]));return {weekday:p.weekday,hour:Number(p.hour)%24,minute:Number(p.minute),date:`${p.year}-${p.month}-${p.day}`}}
+function minutes(t){const m=t.trim().match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);if(!m)return null;let h=Number(m[1])%12;if(m[3].toUpperCase()==='PM')h+=12;return h*60+Number(m[2])}
+function splitWindow(text){if(!text||text==='-'||/^closed$/i.test(text))return null;const p=text.split(/\s*[-–—]\s*/);if(p.length!==2)return null;const start=minutes(p[0]),end=minutes(p[1]);return start===null||end===null?null:{start,end,label:text}}
+function formatMinute(m){let h=Math.floor(m/60),min=m%60;const ap=h>=12?'PM':'AM';h=h%12||12;return `${h}:${String(min).padStart(2,'0')} ${ap}`}
+function windowsFor(g){
+  if(g.status==='Closed')return [];
+  if(g.status==='Event Only')return [];
+  if(g.status==='Open Day')return [splitWindow(g.am)].filter(Boolean);
+  if(state.mode==='summer'||state.mode==='event')return [];
+  let raw=[];
+  if(state.mode==='regular')raw=[g.am,g.pm];
+  if(state.mode==='late')raw=[g.late,g.pm];
+  if(state.mode==='allSchool')raw=[g.allSchool,g.pm];
+  const seen=new Set();return raw.map(splitWindow).filter(Boolean).filter(w=>!seen.has(w.label)&&seen.add(w.label));
+}
+function liveStatus(g){
+  if(g.status==='Closed')return {kind:'closed',label:'Closed',detail:'No routine access',next:null};
+  if(g.status==='Event Only')return state.mode==='event'?{kind:'event',label:'Authorization required',detail:'Event plan controls this gate',next:null}:{kind:'event',label:'Event only',detail:'Closed unless specifically authorized',next:null};
+  if(g.status==='Scheduled'&&(state.mode==='summer'||state.mode==='event'))return {kind:'unscheduled',label:'Not scheduled',detail:state.mode==='summer'?'Refer to the summer or break access plan':'Event plan controls scheduled access',next:null};
+  const n=chicagoNow();const now=n.hour*60+n.minute;const ws=windowsFor(g).sort((a,b)=>a.start-b.start);
+  for(const w of ws){if(now>=w.start&&now<w.end)return {kind:'open',label:'Open now',detail:`Closes at ${formatMinute(w.end)}`,next:{minute:w.end,type:'closes'}};if(now<w.start)return {kind:'closed',label:'Closed now',detail:`Next opens at ${formatMinute(w.start)}`,next:{minute:w.start,type:'opens'}}}
+  return {kind:'closed',label:'Closed now',detail:'No more scheduled openings today',next:null};
+}
+function typeLabel(g){return g.status==='Open Day'?'Open day':g.status}
+function gateText(g){return Object.values(g).join(' ').toLowerCase()}
+function filteredGates(){return gateData.filter(g=>g.campus===state.campus).filter(g=>gateText(g).includes(state.search.toLowerCase())).filter(g=>{const l=liveStatus(g);if(state.filter==='all')return true;if(state.filter==='open')return l.kind==='open';if(state.filter==='scheduled')return g.status==='Scheduled'||g.status==='Open Day';if(state.filter==='event')return g.status==='Event Only';if(state.filter==='closed')return l.kind==='closed'||l.kind==='unscheduled';return true})}
+function scheduleSummary(g){const ws=windowsFor(g);if(g.status==='Event Only')return state.mode==='event'?'Authorization required':'Closed unless authorized';if(g.status==='Closed')return 'Closed';if(g.status==='Scheduled'&&(state.mode==='summer'||state.mode==='event'))return 'Not scheduled in this mode';return ws.length?ws.map(w=>w.label).join(' · '):'No scheduled window'}
+function nextCampusChange(items){const n=chicagoNow();const now=n.hour*60+n.minute;const changes=[];items.forEach(g=>{const l=liveStatus(g);if(l.next&&l.next.minute>=now)changes.push({name:g.name,...l.next})});changes.sort((a,b)=>a.minute-b.minute);return changes[0]||null}
+function renderHero(){const c=campusData[state.campus];document.getElementById('heroImage').src=c.hero;document.getElementById('heroImage').alt=c.heroAlt;document.getElementById('heroTitle').textContent=c.title;document.getElementById('heroLead').textContent=c.lead;document.getElementById('heroAddress').textContent=c.address;document.getElementById('heroMode').textContent=modes[state.mode];document.getElementById('photoLabel').textContent=state.campus;document.getElementById('photoCaption').textContent=c.descriptor;document.title=`${c.title} | PHS Security`}
+function renderMetrics(){const items=gateData.filter(g=>g.campus===state.campus);const open=items.filter(g=>liveStatus(g).kind==='open');const next=nextCampusChange(items);const eventCount=items.filter(g=>g.status==='Event Only').length;const metricData=[
+  {label:'Open now',value:String(open.length),note:open.length?open.map(g=>g.name).join(', '):'No gates in a scheduled open window'},
+  {label:'Next change',value:next?`${next.name} ${next.type} at ${formatMinute(next.minute)}`:'No later change today',compact:true,note:modes[state.mode]},
+  {label:'Visitor entrance',value:campusData[state.campus].visitor,compact:true,note:'Check in with Security'},
+  {label:'Event-control gates',value:String(eventCount),note:'Require event authorization'}
+];document.getElementById('metrics').innerHTML=metricData.map(m=>`<article class="metric"><span class="metric-label">${esc(m.label)}</span><strong class="metric-value ${m.compact?'compact':''}">${esc(m.value)}</strong><span class="metric-note">${esc(m.note)}</span></article>`).join('')}
+function renderCards(){const data=filteredGates();document.getElementById('cards').innerHTML=data.map(g=>{const l=liveStatus(g);return `<article class="gate-card ${l.kind}"><div class="card-main"><div class="card-head"><div class="gate-title-wrap"><div class="gate-icon">${iconFor(g)}</div><div><h3>${esc(g.name)}</h3><p class="location">${esc(g.location)}</p></div></div><span class="badge ${l.kind}">${esc(l.label)}</span></div><div class="current-block"><div class="current-state">${esc(l.label)}</div><div class="next-change">${esc(l.detail)}</div></div><div class="use"><strong>Primary use:</strong> ${esc(g.use)}</div><div class="card-note">${esc(g.notes)}</div><div class="card-actions"><button type="button" class="card-btn" data-copy-gate="${esc(g.name)}">Copy gate info</button><button type="button" class="card-btn" onclick="document.getElementById('zones911').scrollIntoView({behavior:'smooth'})">911 zones</button></div></div><details class="schedule-details"><summary>Schedule details <span>${esc(typeLabel(g))}</span></summary><div class="schedule-grid"><div class="timebox"><span>Current mode</span><strong>${esc(scheduleSummary(g))}</strong></div><div class="timebox"><span>Regular AM</span><strong>${esc(g.am)}</strong></div><div class="timebox"><span>Regular PM</span><strong>${esc(g.pm)}</strong></div><div class="timebox"><span>Late start</span><strong>${esc(g.late)}</strong></div><div class="timebox"><span>All-school late</span><strong>${esc(g.allSchool)}</strong></div><div class="timebox"><span>Operating type</span><strong>${esc(typeLabel(g))}</strong></div></div></details></article>`}).join('');document.getElementById('empty').classList.toggle('hidden',data.length>0);document.getElementById('countLine').textContent=`${data.length} of ${gateData.filter(g=>g.campus===state.campus).length} gates`;document.getElementById('campusHeading').textContent=`${state.campus} Gates`}
+function renderZones(){const c=campusData[state.campus];document.getElementById('zoneTitle').textContent=`${state.campus} 911 Addressing`;const map=document.getElementById('zoneMap');map.src=c.map;map.alt=c.mapAlt;document.getElementById('addresses').innerHTML=c.addresses.map(a=>`<article class="address-card ${a.tone}"><h3>${esc(a.address)}</h3><p><strong>Use for:</strong> ${esc(a.covers)}.</p><button type="button" class="copy" data-copy-address="${esc(a.address)}">Copy</button></article>`).join('')+`<div class="emergency-note">State the address for your physical location, remain on the line, and follow dispatcher instructions. Security guidance does not replace calling 911 when immediate emergency assistance is required.</div>`}
+function renderTable(){const data=filteredGates();document.getElementById('scheduleTable').innerHTML=`<thead><tr><th>Gate</th><th>Live state</th><th>Current mode schedule</th><th>Regular AM</th><th>Regular PM</th><th>Late start</th><th>All-school late</th><th>Use / notes</th></tr></thead><tbody>${data.map(g=>{const l=liveStatus(g);return `<tr><td><strong>${esc(g.name)}</strong><br><small>${esc(g.location)}</small></td><td>${esc(l.label)}<br><small>${esc(l.detail)}</small></td><td>${esc(scheduleSummary(g))}</td><td>${esc(g.am)}</td><td>${esc(g.pm)}</td><td>${esc(g.late)}</td><td>${esc(g.allSchool)}</td><td>${esc(g.use)}<br><small>${esc(g.notes)}</small></td></tr>`}).join('')}</tbody>`}
+function renderContacts(){document.getElementById('contactCards').innerHTML=contacts.map(c=>`<article class="contact"><span class="contact-label">${esc(c.label)}</span><strong>${esc(c.name)}</strong><a href="${esc(c.href)}">${esc(c.display)}</a></article>`).join('')}
+function renderNow(){const n=chicagoNow();document.getElementById('nowLine').textContent=`${n.weekday} · ${new Intl.DateTimeFormat('en-US',{timeZone:'America/Chicago',month:'long',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'}).format(new Date())} Central · ${modes[state.mode]} mode`}
+function renderAll(){renderHero();renderMetrics();renderCards();renderZones();renderTable();renderNow();document.querySelectorAll('.campus-tab').forEach(b=>{const active=b.dataset.campus===state.campus;b.classList.toggle('active',active);b.setAttribute('aria-selected',String(active))});document.getElementById('scheduleMode').value=state.mode;document.querySelectorAll('.filter').forEach(b=>b.classList.toggle('active',b.dataset.filter===state.filter));const params=new URLSearchParams(location.search);params.set('campus',state.campus==='Ward Parkway'?'ward':'wornall');params.set('mode',state.mode);try{history.replaceState(null,'',`${location.pathname}?${params.toString()}${location.hash}`)}catch{}}
+function safeStorageGet(key){try{return localStorage.getItem(key)}catch{return null}}
+function safeStorageSet(key,value){try{localStorage.setItem(key,value)}catch{}}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.classList.remove('show'),1800)}
+async function copyText(text,msg){try{await navigator.clipboard.writeText(text);toast(msg)}catch{const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();toast(msg)}}
+function openLightbox(src,alt){const d=document.createElement('div');d.className='lightbox';d.tabIndex=0;d.innerHTML=`<img src="${esc(src)}" alt="${esc(alt)}">`;d.addEventListener('click',()=>d.remove());d.addEventListener('keydown',e=>{if(e.key==='Escape'||e.key==='Enter')d.remove()});document.body.appendChild(d);d.focus()}
+
+document.getElementById('campusTabs').addEventListener('click',e=>{const b=e.target.closest('[data-campus]');if(!b)return;state.campus=b.dataset.campus;state.filter='all';renderAll()});
+document.getElementById('scheduleMode').addEventListener('change',e=>{state.mode=e.target.value;safeStorageSet('phs-gate-mode',state.mode);renderAll()});
+document.getElementById('filters').addEventListener('click',e=>{const b=e.target.closest('[data-filter]');if(!b)return;state.filter=b.dataset.filter;renderCards();renderTable();document.querySelectorAll('.filter').forEach(x=>x.classList.toggle('active',x===b))});
+document.getElementById('search').addEventListener('input',e=>{state.search=e.target.value;document.getElementById('clearSearch').classList.toggle('hidden',!state.search);renderCards();renderTable()});
+document.getElementById('clearSearch').addEventListener('click',()=>{state.search='';document.getElementById('search').value='';document.getElementById('clearSearch').classList.add('hidden');renderCards();renderTable()});
+document.getElementById('cards').addEventListener('click',e=>{const b=e.target.closest('[data-copy-gate]');if(!b)return;const g=gateData.find(x=>x.campus===state.campus&&x.name===b.dataset.copyGate);const l=liveStatus(g);copyText(`${g.name}\n${g.location}\n${l.label}: ${l.detail}\nUse: ${g.use}\n${g.notes}`,'Gate information copied')});
+document.getElementById('addresses').addEventListener('click',e=>{const b=e.target.closest('[data-copy-address]');if(b)copyText(b.dataset.copyAddress,'911 address copied')});
+document.getElementById('zoneMap').addEventListener('click',e=>openLightbox(e.currentTarget.src,e.currentTarget.alt));
+
+const qs=new URLSearchParams(location.search);if(qs.get('campus')==='ward')state.campus='Ward Parkway';const stored=safeStorageGet('phs-gate-mode');if(stored&&modes[stored])state.mode=stored;if(qs.get('mode')&&modes[qs.get('mode')])state.mode=qs.get('mode');renderContacts();renderAll();setInterval(()=>{renderMetrics();renderCards();renderTable();renderNow()},60000);
+</script>
+</body>
+</html>
