@@ -165,9 +165,74 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,su
 @media print{
   body{background:#fff}.topline,.controls,.actions,.notice a,.floating-emergency,.card-actions,.copy,.toast,.lightbox,.screen-only{display:none!important}.shell{width:100%;padding:0}.hero{min-height:auto;color:#000;background:#fff;box-shadow:none;border:1px solid #bbb}.hero-image,.hero-photo-label{display:none}.hero::after{display:none}.hero-content{width:100%;min-height:auto;padding:20px}.hero h1,.hero-lead,.hero-meta{color:#000}.notice{background:#fff;color:#000;border:1px solid #bbb;box-shadow:none}.notice p{color:#333}.metric,.gate-card,.emergency-panel,.table-wrap,.step,.contact{box-shadow:none;break-inside:avoid}.gate-grid,.metrics,.workflow,.contacts{grid-template-columns:repeat(2,1fr)}.schedule-details{display:block}.schedule-details summary{display:none}.schedule-grid{padding-top:12px}th{background:#eee!important;color:#000!important}.section-head{page-break-after:avoid}
 }
+
+/* Front-page landing experience */
+body.landing-open{overflow:hidden;background:#041b34}
+.landing{position:fixed;inset:0;z-index:200;background:#041b34;display:grid;place-items:center;padding:18px;overflow:auto}
+.landing.hidden{display:none}
+.landing-frame{position:relative;width:min(100%,1672px);margin:auto;border-radius:24px;overflow:hidden;box-shadow:0 30px 90px rgba(0,0,0,.45);background:#061f3c}
+.landing-image{display:block;width:100%;height:auto}
+.hotspot{position:absolute;border:2px solid transparent;border-radius:18px;background:transparent;color:transparent}
+.hotspot:hover,.hotspot:focus-visible{border-color:#fff;box-shadow:0 0 0 5px rgba(200,16,46,.55),0 14px 32px rgba(0,0,0,.35);background:rgba(255,255,255,.04);outline:none}
+.hotspot.ward{left:6.5%;top:45%;width:20%;height:17%}
+.hotspot.wornall{right:6.2%;top:45%;width:20%;height:17%}
+.hotspot.policy{right:5.5%;top:70.2%;width:23.3%;height:9.4%}
+.hotspot.enter{right:5.5%;top:81%;width:23.3%;height:9.1%}
+.landing-mobile-actions{display:none;padding:12px;background:#061f3c;gap:9px;grid-template-columns:1fr 1fr}
+.landing-mobile-actions button{border:1px solid rgba(255,255,255,.25);border-radius:12px;padding:12px;background:#0b4f8a;color:#fff;font-weight:900}
+.landing-mobile-actions button.policy-mobile{background:#b3122d}
+.hub-home{position:fixed;left:14px;bottom:14px;z-index:50;border:0;border-radius:999px;background:#003b71;color:#fff;padding:11px 14px;font-weight:900;box-shadow:0 12px 28px rgba(0,42,78,.28)}
+.policy-modal{position:fixed;inset:0;z-index:260;background:rgba(2,14,28,.86);display:grid;place-items:center;padding:18px}
+.policy-modal.hidden{display:none}
+.policy-dialog{width:min(850px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:22px;box-shadow:0 30px 90px rgba(0,0,0,.5)}
+.policy-head{position:sticky;top:0;z-index:2;display:flex;align-items:center;justify-content:space-between;gap:12px;background:#003b71;color:#fff;padding:16px 19px}
+.policy-head strong{font-size:1rem}.policy-close{border:1px solid rgba(255,255,255,.35);border-radius:10px;background:rgba(255,255,255,.1);color:#fff;padding:8px 11px;font-weight:900}
+.policy-content{padding:22px 24px 28px;color:#26364a;line-height:1.62}
+.policy-content h2{margin:0 0 10px;color:#003b71;font-size:2rem}.policy-content h3{margin:24px 0 6px;color:#003b71}.policy-content p{margin:0 0 13px}.policy-content li{margin:5px 0}
+#hubApp.hidden{display:none}
+@media(max-width:760px){body.landing-open{overflow:auto}.landing{position:min(0);position:fixed;padding:8px;align-items:start}.landing-frame{border-radius:15px}.hotspot{display:none}.landing-mobile-actions{display:grid}.landing-image{min-height:auto}.policy-content{padding:18px 17px 24px}.policy-content h2{font-size:1.55rem}.hub-home{bottom:76px}}
+@media print{.landing,.policy-modal,.hub-home{display:none!important}#hubApp.hidden{display:block!important}}
+
 </style>
 </head>
-<body>
+<body class="landing-open">
+<section id="landing" class="landing" aria-label="Pembroke Hill visitor and gate information home">
+  <div class="landing-frame">
+    <img class="landing-image" src="assets/front-page.png" alt="Pembroke Hill Visiting Campus guide with Ward Parkway and Wornall campus choices, visitor policy summary, and access to the gate information center">
+    <button class="hotspot ward" type="button" data-enter-campus="Ward Parkway" aria-label="Open Ward Parkway Upper Campus gate information">Ward Parkway</button>
+    <button class="hotspot wornall" type="button" data-enter-campus="Wornall Campus" aria-label="Open Wornall Lower Campus gate information">Wornall</button>
+    <button class="hotspot policy" type="button" data-open-policy aria-label="View the full visitor policy">Visitor Policy</button>
+    <button class="hotspot enter" type="button" data-enter-hub aria-label="Enter the Gates and Fences Information Center">Enter Info Center</button>
+    <div class="landing-mobile-actions">
+      <button type="button" data-enter-campus="Ward Parkway">Ward Parkway</button>
+      <button type="button" data-enter-campus="Wornall Campus">Wornall</button>
+      <button class="policy-mobile" type="button" data-open-policy>Visitor Policy</button>
+      <button type="button" data-enter-hub>Enter Info Center</button>
+    </div>
+  </div>
+</section>
+<div id="policyModal" class="policy-modal hidden" role="dialog" aria-modal="true" aria-labelledby="policyTitle">
+  <article class="policy-dialog">
+    <header class="policy-head"><strong>Pembroke Hill Visitor Policy</strong><button id="policyClose" class="policy-close" type="button">Close</button></header>
+    <div class="policy-content"><h2 id="policyTitle">Visiting Campus</h2>
+<p>The safety of our students, faculty and staff is our highest priority. Pembroke Hill is committed to maintaining a welcoming environment while providing consistent and secure access to both campuses. These procedures apply to visits during regular school days and hours.</p>
+<p>All visitors, including parents, guardians, family members, guests, vendors and other individuals conducting business on campus, must check in at an approved visitor location before proceeding to any destination.</p>
+<p>All visitors must present a valid government-issued photo ID and will be screened through the CENTEGIX Visitor Management Platform. Once approved, visitors will receive a visitor badge, which must be worn visibly at all times while on campus.</p>
+<h3>Wornall Campus</h3>
+<p>During school hours, all visitors to the Wornall Campus must check in at the Security Kiosk located at the Wornall Main Gate, regardless of their destination. Visitors may not enter through side gates or proceed directly to a building unless specifically directed by Security or authorized school personnel.</p>
+<h3>Ward Parkway Campus</h3>
+<p>During school hours, visitors to the Ward Parkway Campus must check in at one of the following approved visitor locations:</p>
+<ul><li>Upper School Office</li><li>Middle School Office</li><li>Security Operations Center at the Bellis Athletic Center</li></ul>
+<p>Visitors should use the check-in location most appropriate for their destination and may not proceed to any other area of campus without first checking in.</p>
+<h3>Visitor Expectations</h3>
+<ul><li>Enter through an approved visitor entrance.</li><li>Present a valid government-issued photo ID.</li><li>Complete the required visitor screening and check-in process.</li><li>Wear the issued visitor badge in a visible location.</li><li>Remain in approved areas associated with the purpose of the visit.</li><li>Follow the directions of Security personnel, faculty and staff.</li><li>Check out at the conclusion of the visit and return the visitor badge.</li></ul>
+<p>Visitor procedures may be modified outside regular school hours or for approved performances, athletic contests, large-scale events or other school-sponsored activities. Alternate entry or check-in procedures will be communicated by the school and supported by Security or event personnel.</p>
+<p>If students meet unescorted visitors in the halls, they should not interact with them and should immediately notify a PHS faculty or staff member.</p>
+<p>Students wishing to bring a visitor or guest to school or a school social function must obtain advance permission from the administration at least 72 hours in advance. The visitor or guest name and a school reference contact name and telephone number may be required.</p>
+<p>Pembroke Hill School reserves the right to deny, restrict or revoke campus access when necessary to protect the safety, security and orderly operation of the school community.</p></div>
+  </article>
+</div>
+<div id="hubApp" class="hidden">
 <div class="topline"></div>
 <main class="shell">
   <header class="hero" id="top">
@@ -278,6 +343,8 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,su
   <p class="footer">PHS Gate Access Dashboard · Operational reference only · Confirm temporary changes with Security.</p>
 </main>
 <a class="floating-emergency" href="#zones911">911 Address</a>
+<button id="hubHome" class="hub-home" type="button">Home</button>
+</div>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
 <script>
@@ -390,7 +457,30 @@ document.getElementById('cards').addEventListener('click',e=>{const b=e.target.c
 document.getElementById('addresses').addEventListener('click',e=>{const b=e.target.closest('[data-copy-address]');if(b)copyText(b.dataset.copyAddress,'911 address copied')});
 document.getElementById('zoneMap').addEventListener('click',e=>openLightbox(e.currentTarget.src,e.currentTarget.alt));
 
-const qs=new URLSearchParams(location.search);if(qs.get('campus')==='ward')state.campus='Ward Parkway';const stored=safeStorageGet('phs-gate-mode');if(stored&&modes[stored])state.mode=stored;if(qs.get('mode')&&modes[qs.get('mode')])state.mode=qs.get('mode');renderContacts();renderAll();setInterval(()=>{renderMetrics();renderCards();renderTable();renderNow()},60000);
+
+function showHub(campus){
+  if(campus) state.campus=campus;
+  document.getElementById('landing').classList.add('hidden');
+  document.getElementById('hubApp').classList.remove('hidden');
+  document.body.classList.remove('landing-open');
+  renderAll();
+  window.scrollTo({top:0,behavior:'instant'});
+}
+function showLanding(){
+  document.getElementById('hubApp').classList.add('hidden');
+  document.getElementById('landing').classList.remove('hidden');
+  document.body.classList.add('landing-open');
+  window.scrollTo({top:0,behavior:'instant'});
+}
+function openPolicy(){document.getElementById('policyModal').classList.remove('hidden');document.body.style.overflow='hidden';document.getElementById('policyClose').focus()}
+function closePolicy(){document.getElementById('policyModal').classList.add('hidden');document.body.style.overflow=document.body.classList.contains('landing-open')?'hidden':''}
+document.getElementById('landing').addEventListener('click',e=>{const campus=e.target.closest('[data-enter-campus]');if(campus){showHub(campus.dataset.enterCampus);return}if(e.target.closest('[data-enter-hub]')){showHub();return}if(e.target.closest('[data-open-policy]'))openPolicy()});
+document.getElementById('policyClose').addEventListener('click',closePolicy);
+document.getElementById('policyModal').addEventListener('click',e=>{if(e.target.id==='policyModal')closePolicy()});
+document.getElementById('hubHome').addEventListener('click',showLanding);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!document.getElementById('policyModal').classList.contains('hidden'))closePolicy()});
+
+const qs=new URLSearchParams(location.search);if(qs.get('campus')==='ward')state.campus='Ward Parkway';const stored=safeStorageGet('phs-gate-mode');if(stored&&modes[stored])state.mode=stored;if(qs.get('mode')&&modes[qs.get('mode')])state.mode=qs.get('mode');renderContacts();renderAll();if(qs.get('view')==='hub'){showHub()}setInterval(()=>{renderMetrics();renderCards();renderTable();renderNow()},60000);
 </script>
 </body>
 </html>
