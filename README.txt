@@ -1,22 +1,34 @@
-PHS Gate Access Dashboard
-=========================
+PHS Visitor Access Guide
+========================
 
-READY FOR NETLIFY / GITHUB
+PUBLIC SITE
 
-Upload the entire contents of this folder, preserving the assets folder.
-The main page is index.html.
+This repository contains the public-facing visitor access guide for Pembroke Hill School.
+It intentionally does not publish exact gate schedules, PIN-related notes, emergency-zone maps,
+temporary overrides, or internal event procedures. Staff operational material belongs in the
+authenticated PHS Security Hub.
 
-Included improvements:
-- Campus-aware hero imagery and text
-- Schedule modes for regular, late start, all-school late start, summer/break, and events
-- Schedule-based live gate status and next-change calculations
-- Open-now, scheduled, event-only, and closed-now filters
-- Prominent 911 addressing with copy buttons and enlarged maps
-- Direct campus and mode URLs
-- Mobile, desktop, and print layouts
-- No external libraries or services required
+FILES
+- index.html: semantic page structure and visitor policy
+- styles.css: responsive Pembroke Hill visual system
+- visitor-data.js: public campus arrival details and contact information
+- app.js: accessible campus and policy dialogs
+- assets/: approved public campus imagery
+- assets/ph-athletics-logo.jpg: official interlocking PH athletics mark reference
+
+PUBLIC FEATURES
+- Responsive campus selection and arrival instructions
+- Government-issued ID and visitor badge expectations
+- Google Maps directions to the correct campus entrance
+- Click-to-call campus Security contacts
+- Full visitor policy
+- Staff Security Hub handoff
+- Mobile, print, keyboard, and reduced-motion support
+
+MAINTENANCE
+Review visitor instructions, phone numbers, addresses, and policy wording before each school year.
+Update the "Updated" date in index.html when the public content is verified.
 
 IMPORTANT
-The live status is calculated from the selected schedule mode. It is not connected to gate hardware. Temporary overrides and Security instructions take precedence.
-
-Image files can be replaced without editing JavaScript as long as the filenames remain the same.
+This guide does not indicate whether a physical gate is currently open or closed. Posted signs,
+temporary school communications, and direct Security instructions always take precedence.
